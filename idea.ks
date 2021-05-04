@@ -10,8 +10,8 @@ function take_off {
     rcs on.
     lock throttle to 1.
     stage.
-    lock steering to up.//heading(-90,65).
-    wait until ship:altitude > 10000.
+    lock steering to heading(90,60).
+    wait until ship:altitude > 15000.
     lock throttle to 0.
     unlock throttle.
 }
@@ -24,7 +24,7 @@ function detect_apo {
 }
 
 function landing_exp {
-    wait until ship:altitude < 50000.
+    wait until ship:altitude < 70000.
     CORE:PART:GETMODULE("kOSProcessor"):DOEVENT("Open Terminal").
     brakes on.
     lock steering to srfRetrograde.
@@ -40,6 +40,15 @@ function landing_exp {
         if alt:radar < 400 {
             gear on.
             lock steering to up.
+        }
+        // Abort Mode:
+        if alt:radar < 1000 {
+            if (abs(ship:verticalspeed+targ_vert_velocity)) > 30 {
+                stage.
+                lock steering to up.
+                wait 32.
+                stage.
+            }
         }
     }
 }
