@@ -1,3 +1,8 @@
+// TODO: stop 3 engines during landing
+// TODO: normalize mass during landing (either detect and adjust model,  or vent it)
+
+
+
 function main {
     take_off().
     detect_apo().
