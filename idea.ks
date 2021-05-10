@@ -14,10 +14,13 @@ function take_off {
     rcs on.
     lock throttle to 1.
     stage.
-    lock steering to heading(-90,85).
+    lock steering to heading(90,85).
     print("Vehicle is Pitching Downrange").
     wait until ship:altitude > 5000.
+    lock steering to heading(90,55).
+    wait until stage:liquidfuel = 0.
     lock throttle to 0.
+    stage.
     unlock throttle.
 }
 
@@ -36,6 +39,7 @@ function landing_exp {
     lock steering to srfRetrograde.
     until alt:radar < 18 {    
         set targ_vert_velocity to 2E-09*alt:radar^3 - 2E-05*alt:radar^2 + 0.1113*alt:radar + 0.
+        lock steering to retrograde.
         //print(ship:verticalspeed+targ_vert_velocity).
         if ship:verticalspeed < -targ_vert_velocity {
             set throttle to (throttle + 0.01).
@@ -48,6 +52,7 @@ function landing_exp {
             lock steering to up.
         }
         if alt:radar < 200 {
+            lock steering to up.
             FOR eng IN eng_list {
                 if eng:tag = "center_eng" or eng:tag = "zplus_eng" or eng:tag = "zminus_eng" {
                     if abs(ship:verticalspeed+targ_vert_velocity) < 3 {
@@ -63,6 +68,7 @@ function landing_exp {
                 lock steering to up.
                 wait until verticalSpeed > -10.
                 lock throttle to 0.
+                wait 1.
                 stage.
             }
         }
