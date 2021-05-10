@@ -1,4 +1,3 @@
-// TODO: stop 3 engines during landing
 // TODO: normalize mass during landing (either detect and adjust model,  or vent it)
 
 
@@ -15,27 +14,29 @@ function take_off {
     rcs on.
     lock throttle to 1.
     stage.
-    lock steering to heading(90,60).
-    wait until ship:altitude > 15000.
+    lock steering to heading(-90,85).
+    print("Vehicle is Pitching Downrange").
+    wait until ship:altitude > 5000.
     lock throttle to 0.
     unlock throttle.
 }
 
 function detect_apo {
     wait until verticalSpeed < abs(10).
-    print("AT APO").
+    //print("AT APO").
     unlock steering.
     
 }
 
 function landing_exp {
+    LIST ENGINES IN eng_list.
     wait until ship:altitude < 70000.
-    CORE:PART:GETMODULE("kOSProcessor"):DOEVENT("Open Terminal").
+    //CORE:PART:GETMODULE("kOSProcessor"):DOEVENT("Open Terminal").
     brakes on.
     lock steering to srfRetrograde.
-    until alt:radar < 15 {    
+    until alt:radar < 18 {    
         set targ_vert_velocity to 2E-09*alt:radar^3 - 2E-05*alt:radar^2 + 0.1113*alt:radar + 0.3728.
-        print(ship:verticalspeed+targ_vert_velocity).
+        //print(ship:verticalspeed+targ_vert_velocity).
         if ship:verticalspeed < -targ_vert_velocity {
             set throttle to (throttle + 0.01).
         }
@@ -46,12 +47,25 @@ function landing_exp {
             gear on.
             lock steering to up.
         }
+        if alt:radar < 200 {
+            FOR eng IN eng_list {
+                if eng:tag = "center_eng" or eng:tag = "zplus_eng" or eng:tag = "zminus_eng" {
+                    if abs(ship:verticalspeed+targ_vert_velocity) < 3 {
+                    eng:shutdown().
+                    }
+                else {
+                    eng:activate().
+                }
+                }
+            }
+        }
         // Abort Mode:
         if alt:radar < 1000 {
             if (abs(ship:verticalspeed+targ_vert_velocity)) > 30 {
                 stage.
                 lock steering to up.
-                wait 32.
+                wait until verticalSpeed > -10.
+                lock throttle to 0.
                 stage.
             }
         }
