@@ -35,7 +35,7 @@ function landing_exp {
     brakes on.
     lock steering to srfRetrograde.
     until alt:radar < 18 {    
-        set targ_vert_velocity to 2E-09*alt:radar^3 - 2E-05*alt:radar^2 + 0.1113*alt:radar + 0.3728.
+        set targ_vert_velocity to 2E-09*alt:radar^3 - 2E-05*alt:radar^2 + 0.1113*alt:radar + 0.
         //print(ship:verticalspeed+targ_vert_velocity).
         if ship:verticalspeed < -targ_vert_velocity {
             set throttle to (throttle + 0.01).
@@ -53,9 +53,6 @@ function landing_exp {
                     if abs(ship:verticalspeed+targ_vert_velocity) < 3 {
                     eng:shutdown().
                     }
-                else {
-                    eng:activate().
-                }
                 }
             }
         }
