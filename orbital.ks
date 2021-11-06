@@ -18,7 +18,7 @@ function main {
 }
 
 function doCircularization {
-    local circ is list(time:seconds + 30, 0, 0, 0).
+    local circ is list(time:seconds + 180, 0, 0, 0).
     until false {
         local oldScore is score(circ).
         set circ to improve(circ).
@@ -139,7 +139,6 @@ function removeManeuverFromFlightPlan {
 
 function doLaunch {
     lock throttle to 1.
-    doSafeStage().
     doSafeStage().
 }
 function doAscent {
